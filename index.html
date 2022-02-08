@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weighted Random Number Generator</title>
+    <style>
+        .row {
+            margin-top:10px;
+        }
+
+        label {
+            margin-left: 10px;
+        }
+
+        input {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="rows">
+    </div>
+    <div class="row">
+        <button id="addRange">Add range</button>
+    </div>
+    <div class="row">
+        <label>
+            How many numbers do you want to generate?
+            <input type="number" id="numOfNumbers">
+        </label>
+        <button id="generate">Generate</button>
+    </div>
+
+    <script>
+        let nRanges = 0
+        const addRangeButton = document.getElementById('addRange')
+
+        function addRange() {
+            let n = nRanges;
+            let row = document.createElement('div');
+            row.setAttribute('class', 'row')
+
+            let weightLabel = document.createElement('label');
+            weightLabel.appendChild(document.createTextNode(`weight_${n+1}`));
+
+            let weightInput = document.createElement('input')
+            weightInput.setAttribute('type', 'number')
+            weightInput.setAttribute('id', `w${n}`)
+            weightLabel.append(weightInput)
+
+            let minLabel = document.createElement('label');
+            minLabel.appendChild(document.createTextNode(`range_${n+1}_min`));
+            let minInput = document.createElement('input')
+            minInput.setAttribute('id', `min${n}`)
+            minInput.setAttribute('type', 'number')
+            minLabel.append(minInput)
+
+            let maxLabel = document.createElement('label');
+            maxLabel.setAttribute("for", `max${n}`);
+            maxLabel.appendChild(document.createTextNode(`range_${n+1}_max`));
+            let maxInput = document.createElement('input')
+            maxInput.setAttribute('id', `max${n}`)
+            maxInput.setAttribute('type', 'number')
+
+            row.append(weightLabel)
+            row.append(minLabel)
+            row.append(maxLabel)
+            row.append(maxInput)
+
+            document.getElementById('rows').append(row)
+            nRanges++;
+        }
+        addRangeButton.addEventListener("click", addRange)
+        addRange()
+
+        const generateButton = document.getElementById('generate')
+        generateButton.addEventListener('click', () => {
+            let weights = [];
+            let ranges = [];
+            for (let i = 0; i < nRanges; i++) {
+                weights.push(parseFloat(document.getElementById(`w${i}`).value))
+                let range = {
+                    min: parseFloat(document.getElementById(`min${i}`).value),
+                    max: parseFloat(document.getElementById(`max${i}`).value)
+                }
+                ranges.push(range)
+            }
+            weightSums = weights.reduce((a, x, i) => [...a, x + (a[i-1] || 0)], []);
+            weightSum = weightSums[weightSums.length - 1]
+            weightSums = weightSums.map(x => x/weightSum)
+
+            let numOfNumbers = parseInt(document.getElementById('numOfNumbers').value)
+
+            for (let k = 0; k < numOfNumbers; k++) {
+                let rangePicker = Math.random()
+                for (let i = 0; i < nRanges - 1; i++) {
+                    if (rangePicker >= weightSums[i] && rangePicker <= weightSums[i+1]) {
+                        console.log(rangePicker, weightSums[i], weightSums[i+1])
+                        let min = ranges[i].min
+                        let max = ranges[i].max
+                        let val = document.createElement('div')
+                        val.appendChild(document.createTextNode(Math.random() * (max - min) + min))
+                        document.body.append(val)
+                    }
+                    let min = ranges[nRanges - 1].min
+                    let max = ranges[nRanges - 1].max
+                    let val = document.createElement('div')
+                    val.appendChild(document.createTextNode(Math.random() * (max - min) + min))
+                    document.body.append(val)
+                }
+
+            }
+          
+
+        })
+    </script>
+</body>
+</html>
