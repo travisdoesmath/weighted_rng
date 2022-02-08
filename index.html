@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weighted Random Number Generator v0.1</title>
+    <title>Weighted Random Number Generator v0.1.1</title>
     <style>
         .row {
             margin-top:10px;
@@ -20,6 +20,8 @@
     </style>
 </head>
 <body>
+    <h1>Weighted Random Number Generator v0.1.1</h1>
+
     <div id="rows">
     </div>
     <div class="row">
@@ -77,7 +79,7 @@
 
         const generateButton = document.getElementById('generate')
         generateButton.addEventListener('click', () => {
-            let weights = [];
+            let weights = [0];
             let ranges = [];
             for (let i = 0; i < nRanges; i++) {
                 weights.push(parseFloat(document.getElementById(`w${i}`).value))
@@ -91,6 +93,8 @@
             weightSum = weightSums[weightSums.length - 1]
             weightSums = weightSums.map(x => x/weightSum)
 
+            console.log(weightSums)
+
             let numOfNumbers = parseInt(document.getElementById('numOfNumbers').value)
 
 
@@ -99,7 +103,6 @@
                 let rangePicker = Math.random()
                 for (let i = 0; i < nRanges - 1; i++) {
                     if (rangePicker >= weightSums[i] && rangePicker <= weightSums[i+1]) {
-                        console.log(rangePicker, weightSums[i], weightSums[i+1])
                         let min = ranges[i].min
                         let max = ranges[i].max
                         let val = document.createElement('div')
