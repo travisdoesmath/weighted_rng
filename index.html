@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weighted Random Number Generator v0.1.1</title>
+    <title>Weighted Random Number Generator v0.1.2</title>
     <style>
         .row {
             margin-top:10px;
@@ -31,6 +31,11 @@
         <label>
             How many numbers do you want to generate?
             <input type="number" id="numOfNumbers">
+        </label>
+        <label>
+            Round to 
+            <input type="number" id="rounding" value=4>
+            digits
         </label>
         <button id="generate">Generate</button>
     </div>
@@ -97,6 +102,7 @@
 
             let numOfNumbers = parseInt(document.getElementById('numOfNumbers').value)
 
+            let rounding = parseInt(document.getElementById('rounding').value)
 
             for (let k = 0; k < numOfNumbers; k++) {
                 let found = false;
@@ -105,17 +111,21 @@
                     if (rangePicker >= weightSums[i] && rangePicker <= weightSums[i+1]) {
                         let min = ranges[i].min
                         let max = ranges[i].max
-                        let val = document.createElement('div')
-                        val.appendChild(document.createTextNode(Math.random() * (max - min) + min))
-                        document.body.append(val)
+                        let num = document.createElement('div')
+                        let value = Math.random() * (max - min) + min
+                        value = Math.round(value * 10**rounding) / 10**rounding
+                        num.appendChild(document.createTextNode(value))
+                        document.body.append(num)
                         found = true;
                     }
                     if (!found) {
                         let min = ranges[nRanges - 1].min
                         let max = ranges[nRanges - 1].max
-                        let val = document.createElement('div')
-                        val.appendChild(document.createTextNode(Math.random() * (max - min) + min))
-                        document.body.append(val)
+                        let num = document.createElement('div')
+                        let value = Math.random() * (max - min) + min
+                        value = Math.round(value * 10**rounding) / 10**rounding
+                        num.appendChild(document.createTextNode(value))
+                        document.body.append(num)
                     }
                 }
 
